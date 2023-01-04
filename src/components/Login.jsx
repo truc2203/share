@@ -3,8 +3,35 @@ import { useNavigate } from "react-router-dom";
 import shareVideo from "../assets/share.mp4";
 import logo from "../assets/logowhite.png";
 import { FcGoogle } from "react-icons/fc";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
+import {client} from '../client'
 const Login = () => {
+
+  const navigate = useNavigate()
+
+  const responseGoogle = (response) => {
+    const token = response.credential;
+
+    const user_decode = jwt_decode(token);
+
+    localStorage.setItem("user", JSON.stringify(user_decode));
+
+    const { name, picture, sub } = user_decode;
+
+    const doc  = { 
+      _id : sub,
+      _type : 'user',
+      userName : name,
+      image : picture
+    }
+
+    client.createIfNotExists(doc).then(() => {
+      navigate('/',{replace : true})
+    })
+
+  };
+
   return (
     <div className="flex items-start justify-start flex-col h-screen">
       <div className="relative w-full h-full">
@@ -22,13 +49,19 @@ const Login = () => {
             <img src={logo} alt="logo" width="130px" />
           </div>
           <div className="shadow-2xl ">
-            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_API_TOKEN}>
-
-            </GoogleOAuthProvider>
-            <button className="bg-mainColor flex justify-center items-center rounded p-3 outline-none cursor-pointer opacity-90 hover:opacity-100 duration-150">
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                responseGoogle(credentialResponse);
+              }}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
+            ;
+            {/* <button className="bg-mainColor flex justify-center items-center rounded p-3 outline-none cursor-pointer opacity-90 hover:opacity-100 duration-150">
               <FcGoogle className="mr-4" />
-              Sign In With Google
-            </button>
+              Sign In With
+            </button> */}
           </div>
         </div>
       </div>
