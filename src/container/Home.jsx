@@ -49,7 +49,7 @@ const Home = () => {
         </div>
         {toogleSidebar && (
           <div className="fixed top-0 w-4/5 bg-white h-screen overflow-y-auto shadow-md z-10 animate-slide-in">
-            <div className="absolute w-full flex justify-center items-center p-2">
+            <div className="absolute w-full flex items-center p-2 justify-end">
               <AiFillCloseCircle
                 fontSize={30}
                 className="cursor-pointer"
