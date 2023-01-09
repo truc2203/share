@@ -7,22 +7,20 @@ import { Sidebar, UserProfile } from "../components";
 import { client } from "../client";
 import logo from "../assets/logo.png";
 import Pin from "./Pin";
+import { fetchUser } from "../utils/fetchUser";
 const Home = () => {
   const [toogleSidebar, setToogleSidebar] = useState(true);
   const [user, setUser] = useState(null);
-  const userInfo =
-    localStorage.getItem("user") !== undefined
-      ? JSON.parse(localStorage.getItem("user"))
-      : localStorage.clear();
+  const userInfo = fetchUser()
   const scrollRef = useRef(null);
   useEffect(() => {
     const query = userQuery(userInfo?.sub);
 
     client.fetch(query).then((data) => {
       setUser(data[0]);
-      console.log("fetch : ", user);
     });
   }, []);
+
 
   useEffect(() => {
     scrollRef.current.scrollTo(0, 0);
