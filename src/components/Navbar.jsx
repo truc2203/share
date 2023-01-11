@@ -21,7 +21,7 @@ const Navbar = ({ search, setSearch, user }) => {
         <Link to={`user-profile/${user?._id}`} className='hidden md:block'>
         <img src={user?.image} alt="user-image" className="w-16 h-12 rounded-full" />
         </Link>
-        <Link to={`user-profile/${user?._id}`} className='hidden md:block bg-black p-3 rounded-full'>
+        <Link to={`create-pin`} className='hidden md:block bg-black p-3 rounded-full'>
         <IoMdAdd className="bg-black text-white w-6 h-6"/>
         </Link>
       </div>
