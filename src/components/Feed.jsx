@@ -22,14 +22,12 @@ const Feed = () => {
       client.fetch(query).then((data) => {
         setPins(data)
         setLoading(false)
-        // console.log(data);
       })
     }
     else{ 
       client.fetch(feedQuery).then((data) => {
         setPins(data)
         setLoading(false)
-        // console.log('err',data);
 
       })
     }

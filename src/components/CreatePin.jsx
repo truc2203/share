@@ -16,12 +16,9 @@ const CreatePin = ({ user }) => {
   const [category, setCategory] = useState(null);
   const [assetImage, setAssetImage] = useState(false);
   const [wrongImage, setWrongImage] = useState(false);
-
   const navigate = useNavigate();
-  console.log(wrongImage);
   const uploadImage = (e) => {
     const { type, name } = e.target.files[0];
-    console.log(type);
     if (
       type === "image/jpg" ||
       type === "image/png" ||
@@ -46,6 +43,41 @@ const CreatePin = ({ user }) => {
         });
     } else {
       setWrongImage(true);
+    }
+  };
+
+  const savePin = () => {
+    if (title && about && destination && assetImage?._id && category) {
+      const doc = {
+        _type: "pin",
+        title,
+        about,
+        destination,
+        image: {
+          _type: "image",
+          asset: {
+            _type: "reference",
+            _ref: assetImage?._id,
+          },
+        },
+        userID: user?._id,
+        postedBy: {
+          _type: "postedBy",
+          _ref: user?._id,
+        },
+        category,
+      };
+      client.create(doc).then(() => {
+        navigate("/");
+        console.log('success');
+      });
+    } else {
+      setFields(true);
+      setTimeout(() => {
+        setFields(false);
+      }, 2000);
+      console.log('error');
+
     }
   };
 
@@ -99,7 +131,7 @@ const CreatePin = ({ user }) => {
             )}
           </div>
         </div>
-        <div className="flex flex-1 flex-col gap-6 lg:pe-5 mt-5 w-full ">
+        <div className="flex flex-1 flex-col gap-4 lg:pe-5 mt-5 w-full ">
           <input
             type="text"
             value={title}
@@ -107,15 +139,63 @@ const CreatePin = ({ user }) => {
             placeholder="Add your title here"
             className="outline-none text-xl sm:text-base font-bold border-b-2 border-gray-200 p-2"
           />
+
+          <input
+            type="text"
+            value={about}
+            onChange={(e) => setAbout(e.target.value)}
+            placeholder="What is your pin about"
+            className="outline-none text-xl sm:text-base border-b-2 border-gray-200 p-2"
+          />
+          <input
+            type="text"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            placeholder="Add a destination link"
+            className="outline-none text-xl sm:text-base border-b-2 border-gray-200 p-2"
+          />
+          <div className="flex flex-col">
+            <div>
+              <p className="mb-2 font-semibold ">Choose Pin Category</p>
+              <select
+                onChange={(e) => setCategory(e.target.value)}
+                className="outline-none w-4/5 text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer"
+              >
+                <option value="other" className="bg-white">
+                  Select Category
+                </option>
+                {categories.map((category) => (
+                  <option
+                  key={category?.name}
+                    className="text-base border-0 bg-white text-black"
+                    value={category?.name}
+                  >
+                    {category?.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-end items-end mt-5">
+              <button
+                className="bg-red-500 text-white font-semibold rounded-full p-2 w-28"
+                onClick={savePin}
+              >
+                Save Pin
+              </button>
+            </div>
+          </div>
           {user && (
             <div className="flex gap-2 my-2 items-center bg-white rounded-lg">
-              <img src={user.image} alt="user-profife" className="w-10 h-10 rounded-full" />
+              <img
+                src={user?.image}
+                alt="user-profife"
+                className="w-10 h-10 rounded-full"
+              />
               <p className="font-semibold">{user.userName}</p>
             </div>
           )}
         </div>
       </div>
-      
     </div>
   );
 };

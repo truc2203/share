@@ -4,7 +4,6 @@ import { urlFor, client } from "../client";
 import { v4 as uuidv4 } from "uuid";
 import { MdDownloadForOffline, MdDelete } from "react-icons/md";
 import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
-import {AiTwotoneDelete} from 'react-icons/ai'
 import { fetchUser } from "../utils/fetchUser";
 const Pin = ({ pin }) => {
   const navigate = useNavigate();
@@ -14,7 +13,6 @@ const Pin = ({ pin }) => {
     (item) => item.postedBy._id === userInfo.sub
   )?.lenght;
   alreadySaved = alreadySaved?.length > 0 ? alreadySaved : [];
-  // console.log(userInfo);
   const savePin = (id) => {
     if (!alreadySaved) {
       client
@@ -23,7 +21,7 @@ const Pin = ({ pin }) => {
         .insert("after", "save[-1]", [
           {
             _key: uuidv4(),
-            userId: userInfo.sub,
+            userID: userInfo.sub,
             postedBy: {
               _type: "postedBy",
               _ref: userInfo.sub,
